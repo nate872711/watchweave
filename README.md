@@ -20,7 +20,24 @@ Plexboxd is a lightweight Flask webhook service that listens to **Tautulli playb
 cp .env.example .env
 docker compose -f docker/docker-compose.yml up -d --build
 ```
-
+### Example docker compose
+```yaml
+services:
+  plexboxd:
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+    container_name: plexboxd
+    env_file:
+      - ../.env
+    ports:
+      - "${PORT:-8089}:8089"
+    volumes:
+      - plexboxd-data:/data
+    restart: unless-stopped
+volumes:
+  plexboxd-data:
+```
 
 Service will listen on `http://0.0.0.0:${PORT}/webhook/tautulli` (default `8089`).
 
