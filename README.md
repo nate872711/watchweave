@@ -1,4 +1,5 @@
-<img src="/branding/plexboxd-logo.png" width="160" height="160">
+<p align="center">
+<img src="/branding/plexboxd-banner.png" width="300">
 
 
 # 🍿 Plexboxd
