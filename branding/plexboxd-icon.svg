@@ -1,0 +1,19 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#141414"></stop>
+      <stop offset="100%" stop-color="#000000"></stop>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="64" fill="url(#bg)"></rect>
+
+  <!-- Letter P -->
+  <text x="110" y="315" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="240" font-weight="800" fill="#E5A00D">P</text>
+
+  <!-- Four color squares -->
+  <rect x="280" y="185" width="48" height="48" rx="8" fill="#FF8000"></rect>
+  <rect x="340" y="185" width="48" height="48" rx="8" fill="#00B3E6"></rect>
+  <rect x="280" y="245" width="48" height="48" rx="8" fill="#A2E043"></rect>
+  <rect x="340" y="245" width="48" height="48" rx="8" fill="#F5C518"></rect>
+</svg>
