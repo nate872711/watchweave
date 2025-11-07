@@ -43,7 +43,7 @@ It syncs your watched movies and shows, updates your Letterboxd diary, manages w
 
 ## 🛣️ Roadmap
 
-- [ ] Local webui dashboard with sync stats  
+- [ ] Local webui dashboard with sync stats + settings menu  
 - [ ] Smart retry + failure queue system  
 
 ---
