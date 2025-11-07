@@ -20,25 +20,29 @@ It syncs your watched movies and shows, updates your Letterboxd diary, manages w
 
 ## 🚀 Features
 
-| Feature | Description |
-|----------|--------------|
-| 🎞️ **Diary Sync** | Sync Plex watched activity to your Letterboxd diary |
-| 🧾 **IMDb Sync** | Import IMDb ratings/watchlist CSVs and sync to Trakt or Letterboxd |
-| 🔁 **Trakt Integration** | Pushes watched items, lists, and watchlists to Trakt |
-| 📚 **Collections → Lists** | Map Plex collections directly to Trakt lists |
-| 📊 **Sync History & Logs** | Tracks every synced item with timestamps |
-| 💬 **Webhook Support** | Optional Discord or Slack notifications |
-| 🐳 **Dockerized** | Easy to deploy and run as a lightweight container |
+- ✅ Sync **watched status** across Plex, Trakt, and Letterboxd  
+- ✅ Import **IMDb ratings** directly from your exported CSV  
+- ✅ Optional **Tautulli** integration for richer playback data  
+- ✅ Auto-generates `/config/config.yml` from environment variables  
+- ✅ Graceful fallback to Plex-only mode if Tautulli unavailable  
+- ✅ Built-in Trakt token refresh  
+- ✅ Clear sync summaries in logs after every cycle  
+
+---
+
+## 🧱 Requirements
+
+- Docker & Docker Compose  
+- Plex server with valid API token  
+- (Optional) Trakt, Letterboxd, and/or IMDb accounts  
+- (Optional) Tautulli instance with API key  
 
 ---
 
 ## 🛣️ Roadmap
 
-- [ ] WebUI
-- [ ] Two-way Letterboxd ↔ Plex sync  
-- [ ] Local web dashboard with sync stats  
+- [ ] Local webui dashboard with sync stats  
 - [ ] Smart retry + failure queue system  
-- [ ] Scheduled background sync intervals  
 
 ---
 
@@ -121,119 +125,87 @@ services:
       retries: 3
       start_period: 20s
 ```
+---
+
+## ⚙️ Environment Variables
+
+| Variable | Description |
+|-----------|-------------|
+| `TZ` | Timezone, e.g. `America/New_York` |
+| `LOG_LEVEL` | Logging verbosity (`INFO`, `DEBUG`, etc.) |
+| `SYNC_INTERVAL_MINUTES` | How often to run syncs |
+| `SYNC_DIRECTION` | Comma-separated directions (e.g. `plex->trakt,letterboxd`) |
+
+---
+
 ## ⚙️ Setup Guide
 
-### 1️⃣ Plex Setup
+### 🎬 Plex
+1. Log into Plex → Account → **Tokens** → copy your `X-Plex-Token`.  
+2. Update your environment variables:
+   ```bash
+   PLEX_ENABLED=true
+   PLEX_SERVER_URL=http://your-plex-ip:32400
+   PLEX_TOKEN=your-plex-token
+   ```
 
-1. Get your **Plex Token**:
-   - Open Plex Web → Settings → Account → Show Advanced
-   - Click any API link (or use [https://app.plex.tv/desktop](https://app.plex.tv/desktop￼)
-   - Press F12 → Network tab, then refresh.
-   - Look for a request URL containing X-Plex-Token= — that’s your token.
-  
-Example:
-```
-[https://plex.tv/api](https://plex.tv/api/v2?X-Plex-Token=abcd1234efgh5678)
-```
+> 💡 Tip: WatchWeave works fine even without Tautulli — it just uses Plex history directly.
 
-2. Set your **Plex Base URL**:
-   - Usually `http://<your-server-ip>:32400`
-
-3. Confirm your libraries are correctly matched to **The Movie Database (TMDb)** and/or **IMDb** so IDs are available.
 
 ---
 
-### 2️⃣ Letterboxd Setup
-
-Letterboxd does not currently have a full public write API,  
-so WatchWeave uses CSV-based sync for diary entries.
-
-1. In your `docker-compose.yml`, set:
-
-```
-      - LETTERBOXD_USERNAME=YOUR_LETTERBOXD_USERNAME
-      - LETTERBOXD_PASSWORD=YOUR_LETTERBOXD_PASSWORD
-```
-
-2. This CSV file will be automatically filled with watched items that can be imported to Letterboxd.
-
-3. Import manually:
-   - Visit https://letterboxd.com/import/
-   - Upload the generated CSV to sync your diary entries.
+### 📈 Tautulli (Optional)
+1. Open your Tautulli web interface → Settings → Web Interface → API Key  
+2. Copy your key and URL:
+   ```bash
+   TAUTULLI_ENABLED=true
+   TAUTULLI_API_URL=http://your-tautulli:8181/api/v2
+   TAUTULLI_API_KEY=your-api-key
+   ```
 
 ---
 
-### 3️⃣ Trakt.tv Setup
-
-1. Create a new Trakt app:  
-   https://trakt.tv/oauth/applications
-
-2. Copy your credentials:
-   - Client ID  
-   - Client Secret  
-   - Access Token (after manual auth)
-
-3. Add them to `docker-compose.yml`:
-
-```
-TRAKT_CLIENT_ID=your_trakt_client_id
-TRAKT_CLIENT_SECRET=your_trakt_client_secret
-TRAKT_ACCESS_TOKEN=your_trakt_access_token
-```
-
-Once configured, WatchWeave can:
-- Add IMDb movies to your Trakt watchlist  
-- Create or update Trakt lists from Plex collections  
-- Sync watched items from Plex to Trakt  
+### 🎥 Letterboxd
+1. Supply your **username** and **password** for watchlist and list syncing:
+   ```bash
+   LETTERBOXD_ENABLED=true
+   LETTERBOXD_USERNAME=your-username
+   LETTERBOXD_PASSWORD=your-password
+   ```
 
 ---
 
-### 4️⃣ IMDb Setup
+### 🎞️ Trakt.tv
+1. Go to [https://trakt.tv/oauth/applications](https://trakt.tv/oauth/applications)  
+2. Create a new application using:
+   - **Redirect URI:** `urn:ietf:wg:oauth:2.0:oob`  
+3. Copy your **Client ID** and **Client Secret**  
+4. Generate tokens:
+   ```bash
+   curl -X POST https://api.trakt.tv/oauth/token \
+     -d '{"code":"AUTH_CODE","client_id":"CLIENT_ID","client_secret":"CLIENT_SECRET","redirect_uri":"urn:ietf:wg:oauth:2.0:oob","grant_type":"authorization_code"}'
+   ```
+5. Add them to your docker environment:
+   ```bash
+   TRAKT_ENABLED=true
+   TRAKT_CLIENT_ID=your-client-id
+   TRAKT_CLIENT_SECRET=your-client-secret
+   TRAKT_ACCESS_TOKEN=your-access-token
+   TRAKT_REFRESH_TOKEN=your-refresh-token
+   ```
 
-1. Export your ratings and watchlist from IMDb:
-   - Visit https://www.imdb.com/list/ratings → **Export**
-   - Visit https://www.imdb.com/list/watchlist → **Export**
+---
 
-2. Place them in your config volume (e.g. `/config/imdb/`).
-
-3. Add to `docker-compose.yml`:
-
-```
-IMDB_RATINGS_CSV=/config/imdb/ratings.csv
-IMDB_WATCHLIST_CSV=/config/imdb/watchlist.csv
-```
-
-4. Run manual syncs:
-
-```
-# IMDb Watchlist → Trakt
-docker exec -it watchweave python -c "from src.sync_jobs import sync_imdb_watchlist_to_trakt; import os; print(sync_imdb_watchlist_to_trakt(os.getenv('IMDB_WATCHLIST_CSV')))"
-```
+### ⭐ IMDb
+1. Visit your IMDb ratings page and click **Export**.  
+2. Save the CSV as `imdb_ratings.csv` in your `/config` folder.  
+3. Set:
+   ```bash
+   IMDB_ENABLED=true
+   IMDB_CSV_PATH=/config/imdb_ratings.csv
+   ```
 
 ---
 
 
-## 5️⃣ Tautulli setup
-- **Notifier:** Webhook
-- **URL:** `http://YOUR_SERVER:8089/webhook/tautulli`
-- **Header (optional):** `X-Webhook-Secret: <WEBHOOK_SECRET>`
-- **Trigger:** Playback Stopped
-- **Payload (JSON example):**
-```json
-{
-  "event": "{event}",
-  "media_type": "{media_type}",
-  "title": "{title}",
-  "year": "{year}",
-  "imdb_id": "{imdb_id}",
-  "tmdb_id": "{themoviedb_id}",
-  "user": "{username}",
-  "user_rating": "{user_rating}",
-  "percent_complete": "{percent_complete}",
-  "stopped": "{stopped}"
-}
-```
-Service will listen on `http://0.0.0.0:${PORT}/webhook/tautulli` (default `8089`).
-
-## License
 MIT © 2025 nate872711
