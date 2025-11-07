@@ -1,15 +1,17 @@
-<p align="center">
-<img src="/branding/watchweave-banner.png" width="300">
+# <img src="/branding/watchweave-icon.png" width="20"> WatchWeave
 
 
-# 🍿 WatchWeave
-<div align="center">
+<img src="/branding/watchweave-banner.png" width="500">
+
+
+
+
 
 [![Docker Pulls](https://img.shields.io/docker/pulls/nate8727/watchweave?logo=docker&style=flat-square)](https://hub.docker.com/r/nate8727/watchweave)
 [![GitHub Release](https://img.shields.io/github/v/release/nate872711/watchweave?logo=github&style=flat-square)](https://github.com/nate872711/watchweave/releases)
 [![Build & Release](https://github.com/nate872711/watchweave/actions/workflows/release.yml/badge.svg)](https://github.com/nate872711/watchweave/actions/workflows/release.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
-</div>
+
 
 **Your Plex movies, your Letterboxd diary — finally in sync.**
 
@@ -77,7 +79,7 @@ services:
 
     environment:
       # 🌍 General
-      - TZ=Etc/UTC #Timezone=America/Chicago
+      - TZ=Etc/UTC
       - LOG_LEVEL=INFO
 
       # 🎬 Plex
