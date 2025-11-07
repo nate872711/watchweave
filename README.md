@@ -16,6 +16,7 @@
 **Your Plex movies, your Letterboxd diary — finally in sync.**
 
 **WatchWeave** is a self-hosted integration bridge between **Plex**, **Letterboxd**, **Trakt**, and **IMDb**.  
+
 It syncs your watched movies and shows, updates your Letterboxd diary, manages watchlists and collections, and provides export/import utilities for your media ecosystem.
 
 ---
