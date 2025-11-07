@@ -130,7 +130,7 @@ services:
     volumes:
       - ./config:/config
       - ./logs:/logs
-      # /your-config-directory:/config
+      # /your-config-directory:/config (optional)
 
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8089/health || exit 1"]
