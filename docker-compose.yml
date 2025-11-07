@@ -1,0 +1,39 @@
+version: "3.9"
+services:
+  watchweave:
+    image: nate8727/watchweave:latest
+    restart: unless-stopped
+    environment:
+      TZ: Etc/UTC
+      LOG_LEVEL: INFO
+      SYNC_INTERVAL_MINUTES: 30
+      SYNC_DIRECTION: "plex->trakt,letterboxd,imdb"
+      PLEX_ENABLED: true
+      PLEX_SERVER_URL: "http://plex.local:32400"
+      PLEX_TOKEN: ""
+      TAUTULLI_ENABLED: false
+      TAUTULLI_API_URL: ""
+      TAUTULLI_API_KEY: ""
+      TRAKT_ENABLED: true
+      TRAKT_CLIENT_ID: ""
+      TRAKT_CLIENT_SECRET: ""
+      TRAKT_ACCESS_TOKEN: ""
+      TRAKT_REFRESH_TOKEN: ""
+      LETTERBOXD_ENABLED: false
+      LETTERBOXD_USERNAME: ""
+      LETTERBOXD_PASSWORD: ""
+      IMDB_ENABLED: false
+      IMDB_CSV_PATH: "/config/imdb_ratings.csv"
+      TVDB_ENABLED: false
+      TVDB_API_KEY: ""
+      TVDB_PIN: ""
+      SERIALIZD_ENABLED: false
+      SERIALIZD_API_KEY: ""
+      MUSICBOARD_ENABLED: false
+      MUSICBOARD_USERNAME: ""
+      MUSICBOARD_API_KEY: ""
+      TMDB_ENABLED: false
+      TMDB_API_KEY: ""
+      CUSTOM_LISTS_ENABLED: false
+    volumes:
+      - ./config:/config
