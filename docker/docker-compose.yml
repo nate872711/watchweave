@@ -1,4 +1,3 @@
-version: "3.9"
 services:
   watchweave:
     image: nate8727/watchweave:latest
