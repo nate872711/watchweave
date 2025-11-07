@@ -57,7 +57,7 @@ It syncs your watched movies and shows, updates your Letterboxd diary, manages w
 - [ ] Rest API/SDK
 - [ ] Multi-User Support
 - [ ] TMDb Integration
-- [ ] See ROADMAP.md for Complete List
+- [ ] See [ROADMAP.md](ROADMAP.md) for Complete List
 
 ---
 
