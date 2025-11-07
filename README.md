@@ -75,7 +75,7 @@ services:
       - "8089:8089"
     environment:
       # 🌐 General
-      - TZ=Etc/UTC
+      - TZ=Etc/UTC #Timezone=America/Chicago
       - LOG_LEVEL=INFO
 
       # 🎬 Plex
@@ -113,8 +113,15 @@ services:
 ### 1️⃣ Plex Setup
 
 1. Get your **Plex Token**:
-   - Open Plex Web → Settings → Account → Show Advanced → Token
-   - Copy the long token string.
+   - Open Plex Web → Settings → Account → Show Advanced
+   - Click any API link (or use [https://app.plex.tv/desktop](https://app.plex.tv/desktop￼)
+   - Press F12 → Network tab, then refresh.
+   - Look for a request URL containing X-Plex-Token= — that’s your token.
+  
+Example:
+```
+[https://plex.tv/api](https://plex.tv/api/v2?X-Plex-Token=abcd1234efgh5678)
+```
 
 2. Set your **Plex Base URL**:
    - Usually `http://<your-server-ip>:32400`
@@ -128,10 +135,11 @@ services:
 Letterboxd does not currently have a full public write API,  
 so WatchWeave uses CSV-based sync for diary entries.
 
-1. In your `.env`, set:
+1. In your `docker-compose.yml`, set:
 
 ```
-CSV_PATH=/config/letterboxd_diary.csv
+      - LETTERBOXD_USERNAME=YOUR_LETTERBOXD_USERNAME
+      - LETTERBOXD_PASSWORD=YOUR_LETTERBOXD_PASSWORD
 ```
 
 2. This CSV file will be automatically filled with watched items that can be imported to Letterboxd.
@@ -152,7 +160,7 @@ CSV_PATH=/config/letterboxd_diary.csv
    - Client Secret  
    - Access Token (after manual auth)
 
-3. Add them to `.env`:
+3. Add them to `docker-compose.yml`:
 
 ```
 TRAKT_CLIENT_ID=your_trakt_client_id
@@ -175,7 +183,7 @@ Once configured, WatchWeave can:
 
 2. Place them in your config volume (e.g. `/config/imdb/`).
 
-3. Add to `.env`:
+3. Add to `docker-compose.yml`:
 
 ```
 IMDB_RATINGS_CSV=/config/imdb/ratings.csv
