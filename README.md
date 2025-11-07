@@ -19,6 +19,8 @@
 
 It syncs your watched movies and shows, updates your Letterboxd diary, manages watchlists and collections, and provides export/import utilities for your media ecosystem.
 
+***WatchWeave is currently in beta***
+
 ---
 
 ## 🚀 Features
