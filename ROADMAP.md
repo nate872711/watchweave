@@ -17,7 +17,7 @@ This document outlines upcoming and potential enhancements planned for **WatchWe
 - **Impact:** Faster sync cycles and reduced API usage.
 
 ### 🎬 Enhanced GUID Matching
-- **Goal:** Fallback lookups via TMDb or OMDb when IMDb IDs are missing.
+- **Goal:** Fallback lookups via TMDb, TheTVDB, or OMDb when IMDb IDs are missing.
 - **Impact:** Improves data matching for Plex items with incomplete metadata.
 
 ### 🧾 Smart Deduplication
@@ -27,6 +27,21 @@ This document outlines upcoming and potential enhancements planned for **WatchWe
 ---
 
 ## 🌐 2. Integrations Expansion
+
+### 📺 TheTVDB Integration
+- **Goal:** Improve TV show matching and metadata enrichment.
+- **Implementation:** Use [TheTVDB API v4](https://thetvdb.github.io/v4-api/) for series and episode resolution.
+- **Impact:** Enhances sync reliability for Plex libraries using TheTVDB agent.
+
+### 🎞️ Serializd Integration
+- **Goal:** Add support for syncing watched history, ratings, and lists with [Serializd](https://serializd.com/).
+- **Implementation:** Use GraphQL API mirroring Trakt's structure.
+- **Impact:** Expands WatchWeave’s ecosystem to new social film-tracking users.
+
+### 🎵 Musicboard Integration
+- **Goal:** Sync Plex music listening activity with [Musicboard](https://musicboard.app/).
+- **Implementation:** Match Plex albums and artists, push plays, and sync favorites/reviews.
+- **Impact:** Adds support for music collections and listening analytics.
 
 ### 📺 TMDb Integration
 - **Goal:** Pull extra metadata (genre, poster, overview) to improve matching.
@@ -56,8 +71,8 @@ This document outlines upcoming and potential enhancements planned for **WatchWe
 - **Goal:** Replace YAML-based cache with SQLite (`/config/data/watchweave.db`).
 - **Impact:** Faster and more reliable comparisons.
 
-### 🔐 OAuth Web Flow for Trakt
-- **Goal:** Simplify Trakt login with browser-based authorization.
+### 🔐 OAuth Web Flow for Trakt and Serializd
+- **Goal:** Simplify login via browser-based authorization.
 - **Impact:** Removes need for manual token setup.
 
 ---
@@ -101,7 +116,7 @@ This document outlines upcoming and potential enhancements planned for **WatchWe
 - **Impact:** Useful for developers and advanced users.
 
 ### 🧭 Multi-User Support
-- **Goal:** Allow multiple Plex users linked to separate Trakt accounts.
+- **Goal:** Allow multiple Plex users linked to separate Trakt or Serializd accounts.
 - **Impact:** Great for families or shared servers.
 
 ---
@@ -109,7 +124,7 @@ This document outlines upcoming and potential enhancements planned for **WatchWe
 ## 🧠 6. Advanced / Long-Term Vision
 
 ### 🎯 Recommendation Sync
-- **Goal:** Sync Trakt and Letterboxd “Recommended” to Plex Collections.
+- **Goal:** Sync Trakt, Serializd, and Letterboxd “Recommended” to Plex Collections.
 - **Impact:** Personalized discovery inside Plex.
 
 ### 📊 Analytics Dashboard
@@ -125,7 +140,7 @@ This document outlines upcoming and potential enhancements planned for **WatchWe
 ## 🏗️ Contribution Guidelines
 If you’d like to contribute:
 1. Fork the repo.
-2. Create a branch (e.g. `feature/trakt-analytics`).
+2. Create a branch (e.g. `feature/tvdb-integration`).
 3. Submit a pull request with a clear description.
 4. Include screenshots or logs if applicable.
 
@@ -133,9 +148,11 @@ If you’d like to contribute:
 
 ## 📅 Versioning & Planning
 Planned for future milestones:
-- **vTBD:** Add incremental sync + SQLite cache  
-- **vTBD:** Introduce Web UI dashboard  
-- **vTBD:** Plugin framework & REST API  
+- **v1.1.0:** Add incremental sync + SQLite cache  
+- **v1.2.0:** Introduce Web UI dashboard  
+- **v1.3.0:** Plugin framework & REST API  
+- **v1.4.0:** Add Serializd and Musicboard integrations  
+- **v1.5.0:** Add TheTVDB data enrichment
 
 ---
 
