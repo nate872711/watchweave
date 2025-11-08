@@ -1,6 +1,7 @@
 # ──────────────────────────────────────────────
 #   WatchWeave Dockerfile
-#   Maintained for Python 3.11+
+#   Python 3.11-slim base image
+#   Fixes import errors and YAML dependency
 # ──────────────────────────────────────────────
 
 FROM python:3.11-slim
@@ -9,21 +10,24 @@ FROM python:3.11-slim
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
-# Create application directory
+# ──────────────────────────────────────────────
+#   Set up working directory
+#   /app is the root; /app/src holds the code
+# ──────────────────────────────────────────────
 WORKDIR /app
 
 # ──────────────────────────────────────────────
-#   Install required system dependencies
+#   Install system dependencies
 # ──────────────────────────────────────────────
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         curl \
         wget \
         tzdata \
-        && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/*
 
 # ──────────────────────────────────────────────
-#   Copy application files
+#   Copy project files
 # ──────────────────────────────────────────────
 COPY src/ /app/src/
 COPY requirements.txt /app/
@@ -31,7 +35,7 @@ COPY requirements.txt /app/
 # ──────────────────────────────────────────────
 #   Install Python dependencies
 # ──────────────────────────────────────────────
-# Make sure PyYAML and other core libraries are present
+# PyYAML is explicitly installed for config generation
 RUN pip install --no-cache-dir -r requirements.txt || \
     pip install --no-cache-dir pyyaml requests python-dotenv rich
 
@@ -41,16 +45,16 @@ RUN pip install --no-cache-dir -r requirements.txt || \
 RUN mkdir -p /config /logs
 
 # ──────────────────────────────────────────────
-#   Set timezone environment variable (overridable)
-# ──────────────────────────────────────────────
-ENV TZ=Etc/UTC
-
-# ──────────────────────────────────────────────
 #   Expose default internal port
 # ──────────────────────────────────────────────
 EXPOSE 8089
 
 # ──────────────────────────────────────────────
-#   Define entrypoint
+#   Environment variables (overridable)
+# ──────────────────────────────────────────────
+ENV TZ=Etc/UTC
+
+# ──────────────────────────────────────────────
+#   Default command — runs main entry point
 # ──────────────────────────────────────────────
 CMD ["python", "-u", "/app/src/main.py"]
