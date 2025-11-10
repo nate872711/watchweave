@@ -1,2 +1,32 @@
+# Core
 requests
+pyyaml
 python-dotenv
+rich
+
+# Web dashboard (FastAPI)
+fastapi
+uvicorn[standard]
+
+# Plex
+plexapi
+
+# Trakt
+trakt.py
+
+# Letterboxd (HTML scraper)
+beautifulsoup4
+lxml
+
+# IMDb (CSV import)
+pandas
+
+# TMDB / TVDB
+tmdbsimple
+tvdb-v4
+
+# Musicboard + Serializd (web API wrappers)
+httpx
+
+# Utilities
+apscheduler
