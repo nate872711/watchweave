@@ -1,16 +1,17 @@
+import logging
 import pandas as pd
-from rich import print
 
+log = logging.getLogger("imdb")
 
 class IMDbClient:
     def __init__(self, csv_path: str):
         self.csv_path = csv_path
 
     def load_ratings(self):
-        """Loads IMDb ratings CSV exported by IMDb."""
+        """Load IMDb ratings CSV (exported from IMDb)."""
         try:
             df = pd.read_csv(self.csv_path)
             return df
         except Exception as e:
-            print(f"[red]IMDb CSV error: {e}")
+            log.exception(f"IMDb CSV load error: {e}")
             return pd.DataFrame()
