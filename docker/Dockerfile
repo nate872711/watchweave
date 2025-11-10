@@ -14,7 +14,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # Copy source and dependencies from the repo root
-COPY ./src /src
+COPY ./src app/src
 COPY ./requirements.txt /app/requirements.txt
 
 # Install dependencies
@@ -28,4 +28,4 @@ EXPOSE 8089
 ENV TZ=Etc/UTC
 
 # Run app
-CMD ["python", "-u", "/src/main.py"]
+CMD ["python", "-u", "app/src/main.py"]
