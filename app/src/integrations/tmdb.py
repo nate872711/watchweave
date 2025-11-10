@@ -1,5 +1,15 @@
-"""TMDb integration stub. Enable via TMDB_ENABLED=true."""
-import logging
+import tmdbsimple as tmdb
+from rich import print
 
-def is_enabled(config):
-    return bool(config.get('tmdb', {}).get('enabled'))
+
+class TMDbClient:
+    def __init__(self, api_key: str):
+        tmdb.API_KEY = api_key
+        self.api = tmdb
+
+        print("[green]TMDb client ready")
+
+    def search_movie(self, query):
+        search = self.api.Search()
+        response = search.movie(query=query)
+        return response.get("results", [])
