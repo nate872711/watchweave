@@ -1,45 +1,46 @@
 import httpx
 from rich import print
 
+
 class TheTVDBClient:
+    BASE = "https://api4.thetvdb.com/v4"
+
     def __init__(self, api_key: str, pin: str):
         self.api_key = api_key
         self.pin = pin
         self.token = None
-        self.base = "https://api4.thetvdb.com/v4"
 
     async def authenticate(self):
-        """Authenticate using API key + PIN → store JWT"""
-        url = f"{self.base}/login"
-        payload = {
-            "apikey": self.api_key,
-            "pin": self.pin
-        }
+        url = f"{self.BASE}/login"
+        payload = {"apikey": self.api_key, "pin": self.pin}
 
-        async with httpx.AsyncClient() as client:
-            response = await client.post(url, json=payload)
-            if response.status_code != 200:
-                print(f"[red]TheTVDB auth failed: {response.text}")
-                return None
-            
-            self.token = response.json().get("data", {}).get("token")
-            print("[green]TheTVDB authentication successful!")
-            return self.token
+        try:
+            async with httpx.AsyncClient() as client:
+                r = await client.post(url, json=payload)
+                data = r.json()
 
-    async def _get(self, endpoint: str):
-        """Internal helper for authenticated GET requests"""
+                if "data" in data:
+                    self.token = data["data"]["token"]
+                    print("[green]TheTVDB authenticated")
+                else:
+                    print(f"[red]TheTVDB auth error: {data}")
+        except Exception as e:
+            print(f"[red]TheTVDB connection error: {e}")
+
+    async def _get(self, endpoint):
+        if not self.token:
+            print("[red]TheTVDB: No token, authenticate first")
+            return None
+
         headers = {"Authorization": f"Bearer {self.token}"}
-        url = f"{self.base}{endpoint}"
+        url = f"{self.BASE}{endpoint}"
 
         async with httpx.AsyncClient() as client:
-            return await client.get(url, headers=headers)
+            r = await client.get(url, headers=headers)
+            return r.json()
 
-    async def get_series(self, tvdb_id: int):
-        """Retrieve series metadata"""
-        response = await self._get(f"/series/{tvdb_id}")
-        return response.json()
+    async def search(self, query):
+        return await self._get(f"/search?query={query}")
 
-    async def search(self, query: str):
-        """Search TVDB for series/episodes"""
-        response = await self._get(f"/search?query={query}")
-        return response.json()
+    async def get_series(self, tvdb_id):
+        return await self._get(f"/series/{tvdb_id}")
