@@ -4,61 +4,85 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: "Semantic version tag (e.g., v1.0.21)"
+        description: "Semantic version (e.g., v1.0.1)"
         required: true
         type: string
 
 jobs:
   build-and-release:
     runs-on: ubuntu-latest
+
     permissions:
       contents: write
       packages: write
 
     steps:
-      - name: Checkout full repository
+
+      ##############################################################
+      # 📦 1. CHECKOUT REPOSITORY (CORRECTED)
+      ##############################################################
+      - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          path: .   # Ensures repo is in $GITHUB_WORKSPACE
 
-      - name: Validate semantic version
+      ##############################################################
+      # 🧪 2. VALIDATE VERSION
+      ##############################################################
+      - name: Validate version format
         run: |
           if [[ ! "${{ inputs.version }}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-            echo "❌ Invalid version format (expected v1.0.0)"
+            echo "❌ Invalid version format! Use semantic versioning like v1.0.1"
             exit 1
           fi
-          echo "✔ Using version: ${{ inputs.version }}"
+          echo "✅ Version OK: ${{ inputs.version }}"
 
+      ##############################################################
+      # 🔐 3. LOGIN TO DOCKER HUB
+      ##############################################################
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Set up Buildx
+      ##############################################################
+      # 🏗️ 4. ENABLE BUILDX
+      ##############################################################
+      - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Build and Push Multi-Arch Image
+      ##############################################################
+      # 🏗️ 5. BUILD AND PUSH MULTI-ARCH IMAGE (FIXED CONTEXT)
+      ##############################################################
+      - name: Build and Push (multi-arch)
         uses: docker/build-push-action@v6
         with:
-          context: .
-          file: ./docker/Dockerfile
+          context: ${{ github.workspace }}     # ⬅️ FIXED
+          file: ${{ github.workspace }}/docker/Dockerfile
           push: true
+
           tags: |
             nate8727/watchweave:${{ inputs.version }}
             nate8727/watchweave:latest
-          platforms: linux/amd64,linux/arm64
-          provenance: false
-          sbom: false
 
-      - name: Tag Release in Git
+          platforms: linux/amd64,linux/arm64
+
+      ##############################################################
+      # 🏷️ 6. CREATE GIT TAG
+      ##############################################################
+      - name: Create Git Tag
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
-
           git tag ${{ inputs.version }}
           git push origin ${{ inputs.version }}
+          echo "🏷️ Git tag pushed: ${{ inputs.version }}"
 
+      ##############################################################
+      # 📦 7. CREATE GITHUB RELEASE
+      ##############################################################
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
@@ -68,9 +92,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Final Summary
+      ##############################################################
+      # 🧾 8. SUMMARY
+      ##############################################################
+      - name: Summary
         run: |
-          echo "🎉 WatchWeave Release Complete"
-          echo "📦 Tags pushed:"
-          echo "   - nate8727/watchweave:latest"
-          echo "   - nate8727/watchweave:${{ inputs.version }}"
+          echo "🎉 WatchWeave Release Complete!"
+          echo "🐳 Docker Images:"
+          echo "   nate8727/watchweave:${{ inputs.version }}"
+          echo "   nate8727/watchweave:latest"
