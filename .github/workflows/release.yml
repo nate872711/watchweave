@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: "Semantic version tag (e.g., v1.0.1)"
+        description: "Semantic version tag (e.g., v1.0.21)"
         required: true
         type: string
 
@@ -16,18 +16,18 @@ jobs:
       packages: write
 
     steps:
-      - name: Checkout repository
+      - name: Checkout full repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Validate version format
+      - name: Validate semantic version
         run: |
           if [[ ! "${{ inputs.version }}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-            echo "❌ Invalid version format! Use semantic versioning like v1.0.1"
+            echo "❌ Invalid version format (expected v1.0.0)"
             exit 1
           fi
-          echo "✅ Version validated: ${{ inputs.version }}"
+          echo "✔ Using version: ${{ inputs.version }}"
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
@@ -35,27 +35,29 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Set up Docker Buildx
+      - name: Set up Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Build and Push (multi-arch)
+      - name: Build and Push Multi-Arch Image
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: ./docker/Dockerfile        # 👈 uses your Dockerfile in /docker/
+          file: ./docker/Dockerfile
           push: true
           tags: |
             nate8727/watchweave:${{ inputs.version }}
             nate8727/watchweave:latest
           platforms: linux/amd64,linux/arm64
+          provenance: false
+          sbom: false
 
-      - name: Create Git Tag
+      - name: Tag Release in Git
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
+
           git tag ${{ inputs.version }}
           git push origin ${{ inputs.version }}
-          echo "✅ Git tag created and pushed: ${{ inputs.version }}"
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
@@ -66,9 +68,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Summary
+      - name: Final Summary
         run: |
-          echo "🎉 Successfully built and released WatchWeave"
-          echo "🕹️ Docker Tags:"
-          echo "   - nate8727/watchweave:${{ inputs.version }}"
+          echo "🎉 WatchWeave Release Complete"
+          echo "📦 Tags pushed:"
           echo "   - nate8727/watchweave:latest"
+          echo "   - nate8727/watchweave:${{ inputs.version }}"
