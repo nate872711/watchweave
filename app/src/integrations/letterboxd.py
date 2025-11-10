@@ -1,27 +1,30 @@
+import logging
 import httpx
 from bs4 import BeautifulSoup
-from rich import print
 
+log = logging.getLogger("letterboxd")
 
 class LetterboxdClient:
     BASE = "https://letterboxd.com"
 
-    def __init__(self, username, password):
+    def __init__(self, username: str, password: str):
         self.username = username
-        self.password = password
-        self.client = httpx.AsyncClient()
+        self.password = password  # Not used yet (scrape-only)
+        self.client = httpx.AsyncClient(timeout=20)
 
     async def get_watched(self):
-        """Scrape watched films (Letterboxd has no official API)."""
+        """Scrape diary entries (no official API)."""
         url = f"{self.BASE}/{self.username}/films/diary/"
-
         try:
             r = await self.client.get(url)
+            r.raise_for_status()
             soup = BeautifulSoup(r.text, "lxml")
-
-            films = [tag.get("data-film-slug") for tag in soup.select("li.diary-entry-row")]
+            films = []
+            for li in soup.select("li.diary-entry-row"):
+                slug = li.get("data-film-slug")
+                if slug:
+                    films.append({"slug": slug})
             return films
-            
         except Exception as e:
-            print(f"[red]Letterboxd scrape error: {e}")
+            log.exception(f"Letterboxd scrape error: {e}")
             return []
