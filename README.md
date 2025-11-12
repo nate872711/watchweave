@@ -38,6 +38,12 @@ It syncs your watched movies and shows, updates your Letterboxd diary, manages w
 
 ---
 
+## Preview (Orbstack)
+<img src="./branding/preview.png">
+
+---
+
+
 ## 🧱 Requirements
 
 - Docker & Docker Compose  
