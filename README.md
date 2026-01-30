@@ -23,18 +23,18 @@ It syncs your watched movies and shows, updates your Letterboxd diary, manages w
 
 ---
 
-## 🚀 Features
+##  Features
 
-- 🔄 **Automatic synchronization** between Plex, Trakt, Letterboxd, IMDb, and more
-- 🧠 Smart merging of watch history, ratings, lists, and collections
-- 🏗 **Auto-generates `config.yml`** dynamically from Docker environment variables --- no manual setup required
-- 🕒 Configurable sync intervals and direction (e.g., Plex → Trakt, or bidirectional)
-- 🐳 Fully Dockerized with minimal configuration
-- 🔐 Secure token handling and optional OAuth2-based login system
-- 🧩 Modular design --- ready for plugin-based expansions and future integrations
-- 📈 **Web dashboard (planned)** on port **8089** for real-time sync logs, manual triggers, and system overview<br>  → Currently reserved; dashboard service will be enabled in an upcoming release
-- 🧾 Detailed logs saved to `/logs` for tracking and diagnostics
-- 🧰 Cross-platform support for Linux, macOS, and Windows
+-  **Automatic synchronization** between Plex, Trakt, Letterboxd, IMDb, and more
+-  Smart merging of watch history, ratings, lists, and collections
+-  **Auto-generates `config.yml`** dynamically from Docker environment variables --- no manual setup required
+-  Configurable sync intervals and direction (e.g., Plex → Trakt, or bidirectional)
+-  Fully Dockerized with minimal configuration
+-  Secure token handling and optional OAuth2-based login system
+-  Modular design --- ready for plugin-based expansions and future integrations
+-  **Web dashboard (planned)** on port **8089** for real-time sync logs, manual triggers, and system overview<br>  → Currently reserved; dashboard service will be enabled in an upcoming release
+-  Detailed logs saved to `/logs` for tracking and diagnostics
+-  Cross-platform support for Linux, macOS, and Windows
 
 ---
 
@@ -44,7 +44,7 @@ It syncs your watched movies and shows, updates your Letterboxd diary, manages w
 ---
 
 
-## 🧱 Requirements
+##  Requirements
 
 - Docker & Docker Compose  
 - Plex server with valid API token  
@@ -53,7 +53,7 @@ It syncs your watched movies and shows, updates your Letterboxd diary, manages w
 
 ---
 
-## 🛣️ Roadmap
+##  Roadmap
 
 - [x] Git Tag Releases (e.g.,`v.1.0.1`, `v1.2.0`)
 - [x] TV Libraries + TheTVDB + Serializd
@@ -71,7 +71,7 @@ It syncs your watched movies and shows, updates your Letterboxd diary, manages w
 
 ---
 
-## 🧩 Supported Integrations
+##  Supported Integrations
 
 | Integration | Supported Operations |
 |--------------|----------------------|
